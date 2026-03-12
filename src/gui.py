@@ -1,12 +1,24 @@
 import customtkinter as ctk
 import threading
 import queue
+import pythoncom
 import time
 import os
 from i18n import i18n
 from benchmark import ExcelBenchmark, ExcelNotInstalledError
 from logger import logger, report_logger
 import system_info
+import logging
+from tkinter import messagebox
+
+class GUILogHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.log_queue.put(log_entry)
 
 class ExcelBenchGUI(ctk.CTk):
     def __init__(self):
@@ -25,9 +37,19 @@ class ExcelBenchGUI(ctk.CTk):
         self.sys_info = {}
         self.excel_info = {}
 
+        # Logging redirection
+        self._setup_logging()
+
         self._build_ui()
         self._load_info()
         self._check_logs()
+
+    def _setup_logging(self):
+        handler = GUILogHandler(self.log_queue)
+        formatter = logging.Formatter('%(message)s') # シンプルにする
+        handler.setFormatter(formatter)
+        handler.setLevel(logging.INFO)
+        logging.getLogger("excelbench").addHandler(handler)
 
     def _build_ui(self):
         self.grid_columnconfigure(0, weight=1)
@@ -102,12 +124,15 @@ class ExcelBenchGUI(ctk.CTk):
     def _load_info(self):
         """システム情報をバックグラウンドで読み込みます。"""
         def load():
+            pythoncom.CoInitialize()
             try:
                 self.sys_info = system_info.get_all_system_info()
                 self.excel_info = self.bench.get_excel_info()
                 self.after(0, self._update_info_display)
             except Exception as e:
                 logger.error(f"Failed to load info: {e}")
+            finally:
+                pythoncom.CoUninitialize()
 
         threading.Thread(target=load, daemon=True).start()
 
@@ -154,6 +179,7 @@ class ExcelBenchGUI(ctk.CTk):
         threading.Thread(target=self._run_benchmark_thread, args=(row_count,), daemon=True).start()
 
     def _run_benchmark_thread(self, row_count):
+        pythoncom.CoInitialize()
         trials = 10
         try:
             # 1. Estimation if 100k
@@ -170,14 +196,25 @@ class ExcelBenchGUI(ctk.CTk):
             # 2. Main Benchmark
             self.log_queue.put(f"> Starting Benchmark ({row_count} rows)...")
             
-            # カスタムロガーの出力をキューに流すための工夫が必要だが、
-            # ここでは進捗状況を個別にputする
+            def progress_callback(current, total):
+                progress = current / total
+                self.after(0, lambda: self.progress_bar.set(progress))
+
+            results = self.bench.run_benchmark(
+                row_count=row_count, 
+                trials=trials, 
+                progress_callback=progress_callback
+            )
             
-            results = self.bench.run_benchmark(row_count=row_count, trials=trials)
+            self.log_queue.put(f"--- {i18n.t('result_title')} ---")
+            self.log_queue.put(f"{i18n.t('cold_start')}: {results['cold_start']:.4f}s")
+            self.log_queue.put(f"{i18n.t('hot_start')}: {results['average_hot']:.4f}s")
             
-            self.log_queue.put("--- Result ---")
-            self.log_queue.put(f"Cold Start: {results['cold_start']:.4f}s")
-            self.log_queue.put(f"Hot Avg: {results['average_hot']:.4f}s")
+            # Show Completion Massagebox
+            self.after(0, lambda: messagebox.showinfo(
+                i18n.t("finish_title"),
+                i18n.t("finish_msg", cold=f"{results['cold_start']:.4f}", hot=f"{results['average_hot']:.4f}")
+            ))
             
             report_logger.info(f"GUI Result - Rows: {row_count}, Cold: {results['cold_start']:.4f}, HotAvg: {results['average_hot']:.4f}")
 
@@ -188,6 +225,7 @@ class ExcelBenchGUI(ctk.CTk):
         finally:
             self.benchmark_running = False
             self.after(0, lambda: self.run_button.configure(state="normal", text=i18n.t("run_bench")))
+            pythoncom.CoUninitialize()
 
     def _check_logs(self):
         try:

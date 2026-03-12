@@ -3,6 +3,7 @@ import time
 import random
 from datetime import datetime
 from logger import logger
+from i18n import i18n
 
 class ExcelNotInstalledError(Exception):
     """Excelがインストールされていない、または自動操作が不可能な場合に投げられる例外。"""
@@ -27,7 +28,7 @@ class ExcelBenchmark:
         """
         try:
             os.system('taskkill /f /im excel.exe >nul 2>&1')
-            logger.info("Existing Excel processes cleaned up.")
+            logger.info(i18n.t("log_cleanup"))
             self.excel = None  # プロセスを落としたので、インスタンス参照をクリアする
             time.sleep(1)
         except Exception as e:
@@ -44,7 +45,7 @@ class ExcelBenchmark:
             self.excel = win32com.client.DispatchEx("Excel.Application")
             self.excel.Visible = False
             self.excel.DisplayAlerts = False
-            logger.info("New Microsoft Excel instance created.")
+            logger.info(i18n.t("log_create_inst"))
             return self.excel
         except Exception as e:
             # クラス名やエラーメッセージから未インストールを判断
@@ -90,7 +91,7 @@ class ExcelBenchmark:
         C列: COUNTIF
         """
         file_path = os.path.join(self.data_dir, f"bench_{row_count}_{int(time.time())}.xlsx")
-        logger.info(f"Generating test file with {row_count} rows: {file_path}")
+        logger.info(i18n.t("log_gen_file", row=row_count))
         
         try:
             if not self.excel:
@@ -109,7 +110,7 @@ class ExcelBenchmark:
 
             wb.SaveAs(file_path)
             wb.Close()
-            logger.info("Test file generated and saved.")
+            logger.info(i18n.t("log_gen_done"))
             return file_path
         except Exception as e:
             logger.error(f"Error generating test file: {e}")
@@ -133,11 +134,12 @@ class ExcelBenchmark:
             logger.error(f"Error during measurement: {e}")
             raise
 
-    def run_benchmark(self, row_count=10000, trials=10):
+    def run_benchmark(self, row_count=10000, trials=10, progress_callback=None):
         """
         ベンチマークプロトコルを実行します。
+        progress_callback: (current_trial, total_trials) を引数に取る関数
         """
-        logger.info(f"Starting benchmark protocol: {row_count} rows, {trials} trials.")
+        logger.info(i18n.t("log_start_bench", row=row_count, trials=trials))
         results = []
         
         try:
@@ -151,17 +153,23 @@ class ExcelBenchmark:
             self.create_instance()
             
             for i in range(trials):
-                trial_type = "Cold Start" if i == 0 else f"Hot Start {i}"
-                logger.info(f"Running Trial {i+1}/{trials} ({trial_type})")
+                trial_type_label = i18n.t("cold_start") if i == 0 else i18n.t("hot_start")
+                logger.info(i18n.t("log_trial", current=i+1, total=trials, type=trial_type_label))
                 
                 duration = self.measure_open_time(file_path)
                 results.append(duration)
                 
-                logger.info(f"Trial {i+1} completed: {duration:.4f} seconds")
+                logger.info(i18n.t("log_trial_end", current=i+1, time=f"{duration:.4f}"))
+                
+                if progress_callback:
+                    progress_callback(i + 1, trials)
+                    
                 time.sleep(0.5) # インターバル
 
             self.excel.Quit()
             self.excel = None
+            
+            logger.info(i18n.t("log_bench_done"))
             
             return {
                 "row_count": row_count,

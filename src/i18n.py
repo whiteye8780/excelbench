@@ -23,7 +23,17 @@ class I18n:
             "estimating": "実行時間を推定中...",
             "estimated_time": "想定実行時間: 約 {min} 分 {sec} 秒",
             "excel_not_found": "Excelが見つかりません。インストールが必要です。",
-            "lang_label": "Language / 言語"
+            "lang_label": "Language / 言語",
+            "finish_title": "診断完了",
+            "finish_msg": "ベンチマークが完了しました。\n\nCold Start: {cold}s\nHot Avg: {hot}s\n\n結果を `logs/report.txt` に保存しました。",
+            "log_cleanup": "既存のExcelプロセスをクリーンアップ中...",
+            "log_gen_file": "{row}行のテストファイルを生成中...",
+            "log_create_inst": "Excelインスタンスを起動中...",
+            "log_start_bench": "{row}行、{trials}回の計測を開始します...",
+            "log_trial": "試行 {current}/{total} を実行中 ({type})",
+            "log_trial_end": "試行 {current} 完了: {time} 秒",
+            "log_gen_done": "テストファイルの生成が完了しました。",
+            "log_bench_done": "すべての計測が完了しました。"
         },
         "en": {
             "title": "ExcelBench - PC Business Suitability Diagnostic",
@@ -45,7 +55,17 @@ class I18n:
             "estimating": "Estimating execution time...",
             "estimated_time": "Estimated Time: ~ {min} min {sec} sec",
             "excel_not_found": "Excel not found. Installation required.",
-            "lang_label": "Language"
+            "lang_label": "Language",
+            "finish_title": "Diagnostic Complete",
+            "finish_msg": "Benchmark has completed.\n\nCold Start: {cold}s\nHot Avg: {hot}s\n\nResults saved to `logs/report.txt`.",
+            "log_cleanup": "Cleaning up existing Excel processes...",
+            "log_gen_file": "Generating test file with {row} rows...",
+            "log_create_inst": "Launching Excel instance...",
+            "log_start_bench": "Starting benchmark: {row} rows, {trials} trials...",
+            "log_trial": "Running Trial {current}/{total} ({type})",
+            "log_trial_end": "Trial {current} completed: {time} sec",
+            "log_gen_done": "Test file generation complete.",
+            "log_bench_done": "Benchmark process complete."
         }
     }
 
