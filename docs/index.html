@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExcelBench - PC業務適正診断ツール</title>
+    <meta name="description" content="Excelの速度を計測し、あなたのPCの業務適正を可視化。時間的損失を数値化するベンチマークツール。">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">ExcelBench</div>
+            <div class="nav-links">
+                <a href="#features">特徴</a>
+                <a href="#download" class="btn-primary">今すぐダウンロード</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Excelの遅さは、<br><span class="highlight">利益の損失</span>です。</h1>
+                <p>「重いExcel」を逆手に取り、PCの処理能力を秒単位で計測。業務効率を最大化するための最適なPC選びをサポートします。</p>
+                <div class="cta-group">
+                    <a href="#download" class="btn-large">無料診断を開始</a>
+                    <span class="version-tag">Latest: v0.3.0</span>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="hero.png" alt="ExcelBench UI Preview">
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>なぜExcelBenchなのか？</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">⏱️</div>
+                    <h3>リアルな計測</h3>
+                    <p>実務で使われる複雑な数式（RANDBETWEEN, COUNTIF等）を用いて、ハードウェアの限界を測定します。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h3>ROIの可視化</h3>
+                    <p>「年間で推定XX時間の損失」という具体的な不利益を表示。買い替えの必要性を数値で証明します。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🌍</div>
+                    <h3>マルチリンガル</h3>
+                    <p>日本語・英語に完全対応。グローバルなチームでも共通の指標でPCスペックを評価できます。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="download-section">
+            <div class="download-card">
+                <h2>準備はいいですか？</h2>
+                <p>次世代のベンチマーク体験を、あなたのPCで。</p>
+                <div class="download-options">
+                    <a href="#" class="btn-download">
+                        <span class="os">Windows版</span>
+                        <span class="action">Download .exe</span>
+                    </a>
+                </div>
+                <p class="license-note">オープンソースライブラリを使用しています。ライセンス情報はアプリ内で確認可能です。</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 ExcelBench Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

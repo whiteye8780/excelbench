@@ -14,7 +14,7 @@ class TestUpdateChecker(unittest.TestCase):
         # モックの設定
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"latest_version": "0.3.0"}
+        mock_response.json.return_value = {"version": "0.3.0"}
         mock_get.return_value = mock_response
 
         # バージョン 0.2.0 に対して 0.3.0 は新しいはず
@@ -27,7 +27,7 @@ class TestUpdateChecker(unittest.TestCase):
         # モックの設定
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"latest_version": "0.1.0"}
+        mock_response.json.return_value = {"version": "0.1.0"}
         mock_get.return_value = mock_response
 
         # バージョン 0.2.0 に対して 0.1.0 は新しくない

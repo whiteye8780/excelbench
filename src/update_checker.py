@@ -21,7 +21,7 @@ class UpdateChecker:
             response.raise_for_status()
             data = response.json()
             
-            latest_version = data.get("latest_version")
+            latest_version = data.get("version")
             if latest_version and UpdateChecker._is_newer(latest_version, VERSION):
                 return latest_version
         except Exception as e:

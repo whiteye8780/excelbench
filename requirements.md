@@ -3,7 +3,6 @@
 - コア価値: 「Excelの遅さ」を時間的損失（ROI）として数値化し、最適なPCへの買い替えを促進する。
 - 収益モデル: 診断結果に基づいた居住国別アフィリエイト（Amazon/EC）への誘導。
 2. システムアーキテクチャ（サーバーレス設計）
-個人開発における維持費を0円に抑え、スケーラビリティを確保する構成。
 コンポーネント技術スタック役割クライアントアプリPython (CustomTkinter)計測ロジックの実行、GUI表示
 設定/統計配信GitHub Pages (JSON)世界平均データ、アフィリエイトURLの配信
 データ収集(DB)Google Forms (API)匿名化された計測結果の集計
@@ -43,9 +42,10 @@ GDPR/Privacy: Google Formsへの送信前に、匿名データ送信の同意（
 6. 開発ロードマップ
 Phase 1: Python + pywin32 による計測ロジックのプロトタイプ作成。
 Phase 2: GUI (CustomTkinter) の実装と日本語・英語のマルチリンガル化。
-Phase 3: PyInstaller によるビルドとリリース。利用規約などの整備。
-Phase 4: GitHub Pages / Google Forms との通信連携実装。READMEの正書。ここで一度ローンチ
-Phase 5: アフィリエイト表示画面の実装。利用状況から収益化を検討
+Phase 3: GitHub Pagesの作成とstats.jsonの作成
+Phase 4: PyInstaller によるビルドとリリース。利用規約などの整備。
+Phase 5: Google Forms との通信連携実装。READMEの正書。ここで一度ローンチ
+Phase 6: アフィリエイト表示画面の実装。利用状況から収益化を検討
 7. 開発中に発生した追加機能・変更機能
 Phase中に発生した追加機能はここに記載する
 Phase1：Excel(Office)がインストールされていない場合はMicrosoft Officeのダウンロードページへ誘導する。
