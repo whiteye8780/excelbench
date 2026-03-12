@@ -33,7 +33,19 @@ class I18n:
             "log_trial": "試行 {current}/{total} を実行中 ({type})",
             "log_trial_end": "試行 {current} 完了: {time} 秒",
             "log_gen_done": "テストファイルの生成が完了しました。",
-            "log_bench_done": "すべての計測が完了しました。"
+            "log_bench_done": "すべての計測が完了しました。",
+            "version": "バージョン",
+            "license": "ライセンス情報",
+            "update_available": "新しいバージョン ({version}) が利用可能です。",
+            "update_btn": "ダウンロードページへ",
+            "env_info_title": "=== 環境情報 ===",
+            "log_cli_start": "ExcelBench Phase 2 実行中 (CLI)...",
+            "log_est_header": "【実行時間推定】 10,000行の計測結果({time}s)に基づく推定値:",
+            "log_trial_est": " - 1試行あたりの想定時間: 約 {time} 秒",
+            "log_total_est": " - 全 {trials} 試行の総想定時間: 約 {min} 分 {sec} 秒",
+            "log_start_bench_gui": "> ベンチマークを開始します ({row}行)...",
+            "log_result_header": "--- {result_title} ---",
+            "log_error": "[エラー] {msg}"
         },
         "en": {
             "title": "ExcelBench - PC Business Suitability Diagnostic",
@@ -65,7 +77,19 @@ class I18n:
             "log_trial": "Running Trial {current}/{total} ({type})",
             "log_trial_end": "Trial {current} completed: {time} sec",
             "log_gen_done": "Test file generation complete.",
-            "log_bench_done": "Benchmark process complete."
+            "log_bench_done": "Benchmark process complete.",
+            "version": "Version",
+            "license": "License Information",
+            "update_available": "New version ({version}) is available.",
+            "update_btn": "Go to Download Page",
+            "env_info_title": "=== Environment Info ===",
+            "log_cli_start": "ExcelBench Phase 2 Starting (CLI)...",
+            "log_est_header": "[Execution Time Estimation] Based on 10,000 rows results ({time}s):",
+            "log_trial_est": " - Estimated per trial: Approx. {time} sec",
+            "log_total_est": " - Total estimated time ({trials} trials): Approx. {min} min {sec} sec",
+            "log_start_bench_gui": "> Starting Benchmark ({row} rows)...",
+            "log_result_header": "--- {result_title} ---",
+            "log_error": "[ERROR] {msg}"
         }
     }
 
@@ -77,7 +101,6 @@ class I18n:
 
     def _get_system_lang(self):
         try:
-            # WindowsのUI言語を取得
             windll = ctypes.windll.kernel32
             lang_id = windll.GetUserDefaultUILanguage()
             primary_lang = locale.windows_locale.get(lang_id, "en_US")

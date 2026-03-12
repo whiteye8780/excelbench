@@ -43,6 +43,7 @@ class ExcelBenchGUI(ctk.CTk):
         self._build_ui()
         self._load_info()
         self._check_logs()
+        self._check_updates()
 
     def _setup_logging(self):
         handler = GUILogHandler(self.log_queue)
@@ -118,8 +119,60 @@ class ExcelBenchGUI(ctk.CTk):
         self.progress_bar.set(0)
 
         self.log_textbox = ctk.CTkTextbox(control_frame, height=200)
-        self.log_textbox.grid(row=5, column=0, padx=20, pady=(10, 20), sticky="nsew")
+        self.log_textbox.grid(row=5, column=0, padx=20, pady=(10, 10), sticky="nsew")
         control_frame.grid_rowconfigure(5, weight=1)
+
+        # 5. Footer (Version & Licenses)
+        footer_frame = ctk.CTkFrame(self, fg_color="transparent")
+        footer_frame.grid(row=3, column=0, padx=20, pady=(0, 10), sticky="ew")
+        
+        from version import VERSION
+        self.ver_label = ctk.CTkLabel(footer_frame, text=f"v{VERSION}", font=ctk.CTkFont(size=10))
+        self.ver_label.pack(side="left", padx=10)
+
+        self.license_btn = ctk.CTkButton(
+            footer_frame, text=i18n.t("license"), width=100, height=20,
+            fg_color="gray", hover_color="#555555",
+            font=ctk.CTkFont(size=10), command=self._show_licenses
+        )
+        self.license_btn.pack(side="right", padx=10)
+
+        # Update Notification Area (Hidden by default)
+        self.update_frame = ctk.CTkFrame(self, fg_color="#2B2B2B", height=0)
+        self.update_label = ctk.CTkLabel(self.update_frame, text="", font=ctk.CTkFont(size=12))
+        self.update_btn = ctk.CTkButton(self.update_frame, text=i18n.t("update_btn"), height=25, command=self._open_download_page)
+        
+    def _show_licenses(self):
+        from licenses import LICENSE_TEXT
+        license_win = ctk.CTkToplevel(self)
+        license_win.title(i18n.t("license"))
+        license_win.geometry("600x400")
+        license_win.attributes("-topmost", True)
+        
+        txt = ctk.CTkTextbox(license_win)
+        txt.pack(fill="both", expand=True, padx=20, pady=20)
+        txt.insert("1.0", LICENSE_TEXT)
+        txt.configure(state="disabled")
+
+    def _open_download_page(self):
+        import webbrowser
+        webbrowser.open(self.bench.OFFICE_DOWNLOAD_URL) # 現状は暫定
+
+    def _check_updates(self):
+        """アップデートを確認します。"""
+        def check():
+            from update_checker import UpdateChecker
+            latest_ver = UpdateChecker.check_for_updates()
+            if latest_ver:
+                self.after(0, lambda: self._show_update_notice(latest_ver))
+        
+        threading.Thread(target=check, daemon=True).start()
+
+    def _show_update_notice(self, version):
+        self.update_frame.grid(row=4, column=0, padx=20, pady=(0, 10), sticky="ew")
+        self.update_label.configure(text=i18n.t("update_available", version=version))
+        self.update_label.pack(side="left", padx=10, pady=5)
+        self.update_btn.pack(side="right", padx=10, pady=5)
 
     def _load_info(self):
         """システム情報をバックグラウンドで読み込みます。"""
@@ -146,12 +199,12 @@ class ExcelBenchGUI(ctk.CTk):
         self.excel_label.configure(text=f"{i18n.t('excel_ver')}: {ver} ({arch})")
 
         # 初期レポート出力
-        report_logger.info("=== Environment Info (GUI) ===")
+        report_logger.info(i18n.t("env_info_title"))
         report_logger.info(f"CPU: {self.sys_info.get('CPU')}")
         report_logger.info(f"Memory: {self.sys_info.get('Memory')}")
         report_logger.info(f"Storage: {self.sys_info.get('Storage')}")
         report_logger.info(f"Excel: {ver} ({arch})")
-        report_logger.info("========================")
+        report_logger.info("=" * 24)
 
     def _on_row_change(self, value):
         rows = int(value)
@@ -194,7 +247,7 @@ class ExcelBenchGUI(ctk.CTk):
                 self.after(0, lambda: self.warning_label.configure(text=msg))
 
             # 2. Main Benchmark
-            self.log_queue.put(f"> Starting Benchmark ({row_count} rows)...")
+            self.log_queue.put(i18n.t("log_start_bench_gui", row=row_count))
             
             def progress_callback(current, total):
                 progress = current / total
@@ -206,7 +259,7 @@ class ExcelBenchGUI(ctk.CTk):
                 progress_callback=progress_callback
             )
             
-            self.log_queue.put(f"--- {i18n.t('result_title')} ---")
+            self.log_queue.put(i18n.t("log_result_header", result_title=i18n.t('result_title')))
             self.log_queue.put(f"{i18n.t('cold_start')}: {results['cold_start']:.4f}s")
             self.log_queue.put(f"{i18n.t('hot_start')}: {results['average_hot']:.4f}s")
             
@@ -219,9 +272,9 @@ class ExcelBenchGUI(ctk.CTk):
             report_logger.info(f"GUI Result - Rows: {row_count}, Cold: {results['cold_start']:.4f}, HotAvg: {results['average_hot']:.4f}")
 
         except ExcelNotInstalledError:
-            self.log_queue.put(f"[ERROR] {i18n.t('excel_not_found')}")
+            self.log_queue.put(i18n.t("log_error", msg=i18n.t('excel_not_found')))
         except Exception as e:
-            self.log_queue.put(f"[ERROR] {str(e)}")
+            self.log_queue.put(i18n.t("log_error", msg=str(e)))
         finally:
             self.benchmark_running = False
             self.after(0, lambda: self.run_button.configure(state="normal", text=i18n.t("run_bench")))

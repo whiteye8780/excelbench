@@ -51,9 +51,9 @@ class ExcelBenchmark:
             # クラス名やエラーメッセージから未インストールを判断
             error_msg = str(e)
             if "Invalid class string" in error_msg or "failed" in error_msg.lower():
-                logger.error(f"Excel is not installed or not found: {e}")
-                raise ExcelNotInstalledError("Microsoft Excel が見つかりません。")
-            logger.error(f"Failed to create Excel instance: {e}")
+                logger.error(i18n.t("log_error", msg=f"Excel not found: {e}"))
+                raise ExcelNotInstalledError(i18n.t("excel_not_found"))
+            logger.error(i18n.t("log_error", msg=f"Failed to create Excel instance: {e}"))
             raise
 
     def get_excel_info(self):
@@ -113,7 +113,7 @@ class ExcelBenchmark:
             logger.info(i18n.t("log_gen_done"))
             return file_path
         except Exception as e:
-            logger.error(f"Error generating test file: {e}")
+            logger.error(i18n.t("log_error", msg=f"Error generating test file: {e}"))
             if 'wb' in locals(): wb.Close(False)
             raise
 
@@ -131,7 +131,7 @@ class ExcelBenchmark:
             duration = end_time - start_time
             return duration
         except Exception as e:
-            logger.error(f"Error during measurement: {e}")
+            logger.error(i18n.t("log_error", msg=f"Error during measurement: {e}"))
             raise
 
     def run_benchmark(self, row_count=10000, trials=10, progress_callback=None):
@@ -179,7 +179,7 @@ class ExcelBenchmark:
             }
 
         except Exception as e:
-            logger.error(f"Benchmark failed: {e}")
+            logger.error(i18n.t("log_error", msg=f"Benchmark failed: {e}"))
             if self.excel:
                 try: self.excel.Quit()
                 except: pass
