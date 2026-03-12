@@ -8,3 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+.agent
+.python-version
+
+# Project specific
+logs/
+data/*.xlsx
