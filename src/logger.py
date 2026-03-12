@@ -1,6 +1,7 @@
 import logging
 import os
 from datetime import datetime
+from paths import get_log_dir
 
 def setup_logger(name="excelbench"):
     """
@@ -14,10 +15,8 @@ def setup_logger(name="excelbench"):
     if logger.handlers:
         return logger
 
-    # ログフォルダの存在確認
-    log_dir = os.path.join(os.getcwd(), "logs")
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+    # ログフォルダの指定
+    log_dir = get_log_dir()
 
     # フォーマット設定
     formatter = logging.Formatter(
@@ -54,9 +53,7 @@ def setup_report_logger(name="excelbench_report"):
     if report_logger.handlers:
         return report_logger
 
-    log_dir = os.path.join(os.getcwd(), "logs")
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+    log_dir = get_log_dir()
 
     # ユーザー向けレポートはシンプルな形式にする
     formatter = logging.Formatter('%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')

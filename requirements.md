@@ -58,3 +58,4 @@ Phase2:終了したら終了のメッセージボックスを表示
 Phase2:使用しているライブラリのライセンス情報の表示
 Phase2:ソフトのバージョン情報の表示、アップデートの通知
 Phase2:Githubのリリース番号とVersion.pyを比べて、アップデートがあれば通知する
+Phase4:ExcelBench.exeを実行したらuserprofile\Document内にExcelBenchフォルダが作成され、データとログを保存する

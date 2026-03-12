@@ -142,6 +142,24 @@ class ExcelBenchGUI(ctk.CTk):
         self.update_label = ctk.CTkLabel(self.update_frame, text="", font=ctk.CTkFont(size=12))
         self.update_btn = ctk.CTkButton(self.update_frame, text=i18n.t("update_btn"), height=25, command=self._open_download_page)
         
+        # 6. Legal Links in Footer
+        legal_frame = ctk.CTkFrame(footer_frame, fg_color="transparent")
+        legal_frame.pack(side="right", padx=10)
+
+        self.privacy_btn = ctk.CTkButton(
+            legal_frame, text=i18n.t("privacy_policy"), width=100, height=20,
+            fg_color="transparent", text_color="gray", hover_color="#333333",
+            font=ctk.CTkFont(size=9, underline=True), command=self._show_privacy
+        )
+        self.privacy_btn.pack(side="right", padx=5)
+
+        self.terms_btn = ctk.CTkButton(
+            legal_frame, text=i18n.t("terms_of_use"), width=80, height=20,
+            fg_color="transparent", text_color="gray", hover_color="#333333",
+            font=ctk.CTkFont(size=9, underline=True), command=self._show_terms
+        )
+        self.terms_btn.pack(side="right", padx=5)
+        
     def _show_licenses(self):
         from licenses import LICENSE_TEXT
         license_win = ctk.CTkToplevel(self)
@@ -157,6 +175,28 @@ class ExcelBenchGUI(ctk.CTk):
     def _open_download_page(self):
         import webbrowser
         webbrowser.open(self.bench.OFFICE_DOWNLOAD_URL) # 現状は暫定
+
+    def _show_terms(self):
+        self._open_local_doc("terms.md")
+
+    def _show_privacy(self):
+        self._open_local_doc("privacy.md")
+
+    def _open_local_doc(self, filename):
+        import webbrowser
+        # ビルド後と開発環境の両方に対応するように paths モジュールでも考慮しているが、 
+        # ここでは docs フォルダ（リソース）を参照するので従来のパス解決を維持
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        doc_path = os.path.join(base_path, "..", "docs", filename)
+        if not os.path.exists(doc_path):
+            # PyInstaller内部のパス (_MEIPASS) を考慮
+            if hasattr(sys, '_MEIPASS'):
+                doc_path = os.path.join(sys._MEIPASS, "docs", filename)
+        
+        if os.path.exists(doc_path):
+            webbrowser.open(f"file:///{os.path.abspath(doc_path)}")
+        else:
+            messagebox.showerror("Error", f"Document not found: {filename}")
 
     def _check_updates(self):
         """アップデートを確認します。"""

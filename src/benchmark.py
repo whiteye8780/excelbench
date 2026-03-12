@@ -4,6 +4,7 @@ import random
 from datetime import datetime
 from logger import logger
 from i18n import i18n
+from paths import get_data_dir
 
 class ExcelNotInstalledError(Exception):
     """Excelがインストールされていない、または自動操作が不可能な場合に投げられる例外。"""
@@ -15,8 +16,12 @@ class ExcelBenchmark:
     """
     OFFICE_DOWNLOAD_URL = "https://www.microsoft.com/ja-jp/microsoft-365/buy/microsoft-365"
 
-    def __init__(self, data_dir="data"):
-        self.data_dir = os.path.join(os.getcwd(), data_dir)
+    def __init__(self, data_dir=None):
+        if data_dir:
+            self.data_dir = os.path.isabs(data_dir) or os.path.join(os.getcwd(), data_dir)
+        else:
+            self.data_dir = get_data_dir()
+        
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
         self.excel = None
