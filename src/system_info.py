@@ -11,7 +11,14 @@ def get_cpu_info():
     """CPU名を取得します。"""
     try:
         if platform.system() == "Windows":
-            return platform.processor()
+            try:
+                import winreg
+                key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+                processor_name, _ = winreg.QueryValueEx(key, "ProcessorNameString")
+                return processor_name.strip()
+            except Exception as e:
+                logger.warning(f"Failed to get CPU name from registry: {e}")
+                return platform.processor()
         return platform.machine()
     except Exception as e:
         logger.error(f"Failed to get CPU info: {e}")
