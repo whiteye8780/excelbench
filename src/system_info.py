@@ -5,6 +5,8 @@ import os
 import subprocess
 from logger import logger
 
+CREATE_NO_WINDOW = 0x08000000
+
 def get_cpu_info():
     """CPU名を取得します。"""
     try:
@@ -34,7 +36,13 @@ def get_storage_type():
         # PowerShellを使用してメディアタイプを判定
         cmd = f'Get-PhysicalDisk | Where-Object {{ $_.DeviceID -eq (Get-Partition -DriveLetter {drive.strip(":")} | Get-Disk).Number }} | Select-Object -ExpandProperty MediaType'
         # 出力をより安全にパースする
-        process = subprocess.run(["powershell", "-Command", cmd], capture_output=True, text=True, check=True)
+        process = subprocess.run(
+            ["powershell", "-Command", cmd], 
+            capture_output=True, 
+            text=True, 
+            check=True,
+            creationflags=CREATE_NO_WINDOW
+        )
         result = process.stdout.strip()
         
         if not result:

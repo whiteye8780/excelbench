@@ -5,6 +5,9 @@ from datetime import datetime
 from logger import logger
 from i18n import i18n
 from paths import get_data_dir
+import subprocess
+
+CREATE_NO_WINDOW = 0x08000000
 
 class ExcelNotInstalledError(Exception):
     """Excelがインストールされていない、または自動操作が不可能な場合に投げられる例外。"""
@@ -27,14 +30,17 @@ class ExcelBenchmark:
         self.excel = None
 
     def cleanup_processes(self):
-        """
-        既存のExcelプロセスをクリーンアップします。
-        (実際には慎重に行う必要がありますが、ベンチマーク環境を整えるために必要です)
-        """
+        """既存のExcelプロセスを完全にサイレントにクリーンアップします。"""
         try:
-            os.system('taskkill /f /im excel.exe >nul 2>&1')
+            # os.system ではなく subprocess.run を使用し、ウィンドウを表示させない
+            subprocess.run(
+                ['taskkill', '/f', '/im', 'excel.exe'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=CREATE_NO_WINDOW
+            )
             logger.info(i18n.t("log_cleanup"))
-            self.excel = None  # プロセスを落としたので、インスタンス参照をクリアする
+            self.excel = None
             time.sleep(1)
         except Exception as e:
             logger.error(f"Failed to cleanup Excel processes: {e}")

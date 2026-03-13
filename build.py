@@ -1,4 +1,5 @@
 import PyInstaller.__main__
+import sys
 import os
 import shutil
 
@@ -8,6 +9,10 @@ def build():
         shutil.rmtree("dist")
     if os.path.exists("build"):
         shutil.rmtree("build")
+    if sys.executable.endswith("pythonw.exe"):
+        sys.stdout = open(os.devnull, "w")
+        sys.stderr = open(os.devnull, "w")
+        sys.stdin = open(os.devnull, "r")
 
     # PyInstallerのオプション設定
     opts = [
