@@ -47,7 +47,10 @@ class I18n:
             "log_total_est": " - 全 {trials} 試行の総想定時間: 約 {min} 分 {sec} 秒",
             "log_start_bench_gui": "> ベンチマークを開始します ({row}行)...",
             "log_result_header": "--- {result_title} ---",
-            "log_error": "[エラー] {msg}"
+            "log_error": "[エラー] {msg}",
+            "cancelling": "停止中...",
+            "cancelled_msg": "キャンセルしました。",
+            "finish_title": "診断完了"
         },
         "en": {
             "title": "ExcelBench - PC Business Suitability Diagnostic",
@@ -93,7 +96,10 @@ class I18n:
             "log_total_est": " - Total estimated time ({trials} trials): Approx. {min} min {sec} sec",
             "log_start_bench_gui": "> Starting Benchmark ({row} rows)...",
             "log_result_header": "--- {result_title} ---",
-            "log_error": "[ERROR] {msg}"
+            "log_error": "[ERROR] {msg}",
+            "cancelling": "Stopping...",
+            "cancelled_msg": "Cancelled.",
+            "finish_title": "Diagnostic Complete"
         }
     }
 

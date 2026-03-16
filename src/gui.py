@@ -261,10 +261,13 @@ class ExcelBenchGUI(ctk.CTk):
 
     def _toggle_benchmark(self):
         if self.benchmark_running:
-            return # TODO: 停止処理の検討
+            self.bench.is_cancelled = True
+            self.run_button.configure(state="disabled", text=i18n.t("cancelling"))
+            return
         
         self.benchmark_running = True
-        self.run_button.configure(state="disabled", text="Running...")
+        self.bench.is_cancelled = False
+        self.run_button.configure(text=i18n.t("stop_bench"))
         self.log_textbox.delete("1.0", "end")
         self.progress_bar.set(0)
         
@@ -299,6 +302,14 @@ class ExcelBenchGUI(ctk.CTk):
                 progress_callback=progress_callback
             )
             
+            if results is None or self.bench.is_cancelled:
+                self.log_queue.put(i18n.t("cancelled_msg"))
+                self.after(0, lambda: messagebox.showinfo(
+                    i18n.t("finish_title"),
+                    i18n.t("cancelled_msg")
+                ))
+                return
+
             self.log_queue.put(i18n.t("log_result_header", result_title=i18n.t('result_title')))
             self.log_queue.put(f"{i18n.t('cold_start')}: {results['cold_start']:.4f}s")
             self.log_queue.put(f"{i18n.t('hot_start')}: {results['average_hot']:.4f}s")
