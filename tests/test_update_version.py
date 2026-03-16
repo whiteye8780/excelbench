@@ -8,9 +8,15 @@ sys.path.insert(0, scripts_dir)
 from update_version import update_html_version, update_json_version
 
 def test_update_html_version():
-    content = '<div class="cta-group"><a href="#download" class="btn-large">無料診断を開始</a><span class="version-tag">Latest: v0.3.0</span></div>'
+    content = '''
+    <span class="version-tag">Latest: v0.3.0</span>
+    <a href="https://github.com/whiteye8780/excelbench/releases/download/v0.3.0/ExcelBench_v0.3.0.zip">Download</a>
+    '''
     new_version = "1.2.3"
-    expected = '<div class="cta-group"><a href="#download" class="btn-large">無料診断を開始</a><span class="version-tag">Latest: v1.2.3</span></div>'
+    expected = '''
+    <span class="version-tag">Latest: v1.2.3</span>
+    <a href="https://github.com/whiteye8780/excelbench/releases/download/v1.2.3/ExcelBench_v1.2.3.zip">Download</a>
+    '''
     
     assert update_html_version(content, new_version) == expected
 

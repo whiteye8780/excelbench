@@ -8,7 +8,12 @@ def update_html_version(content: str, new_version: str) -> str:
     """
     pattern = r'(<span class="version-tag">Latest:\s*v)[0-9\.]+(</span>)'
     replacement = rf'\g<1>{new_version}\g<2>'
-    return re.sub(pattern, replacement, content)
+    content = re.sub(pattern, replacement, content)
+    
+    # GitHub release URL match: .../releases/download/vX.X.X/ExcelBench_vX.X.X.zip
+    url_pattern = r'(github\.com/whiteye8780/excelbench/releases/download/v)[0-9\.]+(/ExcelBench_v)[0-9\.]+(\.zip)'
+    url_replacement = rf'\g<1>{new_version}\g<2>{new_version}\g<3>'
+    return re.sub(url_pattern, url_replacement, content)
 
 def update_json_version(content: str, new_version: str) -> str:
     """
