@@ -3,20 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExcelBench - PC業務適正診断ツール</title>
+    <title data-i18n="doc_title">ExcelBench - PC業務適正診断ツール</title>
     <meta name="description" content="Excelの速度を計測し、あなたのPCの業務適正を可視化。時間的損失を数値化するベンチマークツール。">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@500;800&display=swap" rel="stylesheet">
+    <style>
+        .lang-switcher {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-left: 2rem;
+        }
+        .lang-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .lang-btn:hover {
+            border-color: var(--primary);
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo">ExcelBench</div>
             <div class="nav-links">
-                <a href="#features">特徴</a>
-                <a href="https://github.com/whiteye8780/excelbench/releases/download/v0.4.0/ExcelBench_v0.4.0.zip" class="btn-primary">今すぐダウンロード</a>
+                <a href="#features" data-i18n="nav_features">特徴</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn" onclick="setLanguage('ja')" id="lang-ja">JP</button>
+                    <button class="lang-btn" onclick="setLanguage('en')" id="lang-en">EN</button>
+                </div>
+                <a href="https://github.com/whiteye8780/excelbench/releases/download/v0.4.0/ExcelBench_v0.4.0.zip" class="btn-primary" data-i18n="nav_download">今すぐダウンロード</a>
             </div>
         </nav>
     </header>
@@ -24,10 +53,10 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <h1>Excelの遅さは、<br><span class="highlight">利益の損失</span>です。</h1>
-                <p>「重いExcel」を逆手に取り、PCの処理能力を秒単位で計測。業務効率を最大化するための最適なPC選びをサポートします。</p>
+                <h1 data-i18n="hero_title">Excelの遅さは、<br><span class="highlight">利益の損失</span>です。</h1>
+                <p data-i18n="hero_desc">「重いExcel」を逆手に取り、PCの処理能力を秒単位で計測。業務効率を最大化するための最適なPC選びをサポートします。</p>
                 <div class="cta-group">
-                    <a href="#download" class="btn-large">無料診断を開始</a>
+                    <a href="#download" class="btn-large" data-i18n="cta_start">無料診断を開始</a>
                     <span class="version-tag">Latest: v0.4.0</span>
                 </div>
             </div>
@@ -37,37 +66,37 @@
         </section>
 
         <section id="features" class="features">
-            <h2>なぜExcelBenchなのか？</h2>
+            <h2 data-i18n="features_title">なぜExcelBenchなのか？</h2>
             <div class="feature-grid">
                 <div class="feature-card">
                     <div class="icon">⏱️</div>
-                    <h3>リアルな計測</h3>
-                    <p>実務で使われる複雑な数式（RANDBETWEEN, COUNTIF等）を用いて、ハードウェアの限界を測定します。</p>
+                    <h3 data-i18n="feature_1_title">リアルな計測</h3>
+                    <p data-i18n="feature_1_desc">実務で使われる複雑な数式（RANDBETWEEN, COUNTIF等）を用いて、ハードウェアの限界を測定します。</p>
                 </div>
                 <div class="feature-card">
                     <div class="icon">📊</div>
-                    <h3>ROIの可視化</h3>
-                    <p>「年間で推定XX時間の損失」という具体的な不利益を表示。買い替えの必要性を数値で証明します。</p>
+                    <h3 data-i18n="feature_2_title">ROIの可視化</h3>
+                    <p data-i18n="feature_2_desc">「年間で推定XX時間の損失」という具体的な不利益を表示。買い替えの必要性を数値で証明します。</p>
                 </div>
                 <div class="feature-card">
                     <div class="icon">🌍</div>
-                    <h3>マルチリンガル</h3>
-                    <p>日本語・英語に完全対応。グローバルなチームでも共通の指標でPCスペックを評価できます。</p>
+                    <h3 data-i18n="feature_3_title">マルチリンガル</h3>
+                    <p data-i18n="feature_3_desc">日本語・英語に完全対応。グローバルなチームでも共通の指標でPCスペックを評価できます。</p>
                 </div>
             </div>
         </section>
 
         <section id="download" class="download-section">
             <div class="download-card">
-                <h2>準備はいいですか？</h2>
-                <p>次世代のベンチマーク体験を、あなたのPCで。</p>
+                <h2 data-i18n="download_title">準備はいいですか？</h2>
+                <p data-i18n="download_desc">次世代のベンチマーク体験を、あなたのPCで。</p>
                 <div class="download-options">
                     <a href="https://github.com/whiteye8780/excelbench/releases/download/v0.4.0/ExcelBench_v0.4.0.zip" class="btn-download">
-                        <span class="os">Windows版</span>
+                        <span class="os" data-i18n="os_win">Windows版</span>
                         <span class="action">Download .exe</span>
                     </a>
                 </div>
-                <p class="license-note">オープンソースライブラリを使用しています。ライセンス情報はアプリ内で確認可能です。</p>
+                <p class="license-note" data-i18n="license_note">オープンソースライブラリを使用しています。ライセンス情報はアプリ内で確認可能です。</p>
             </div>
         </section>
     </main>
@@ -79,6 +108,69 @@
     </footer>
 
     <script>
+        const translations = {
+            ja: {
+                doc_title: "ExcelBench - PC業務適正診断ツール",
+                nav_features: "特徴",
+                nav_download: "今すぐダウンロード",
+                hero_title: "Excelの遅さは、<br><span class=\"highlight\">利益の損失</span>です。",
+                hero_desc: "「重いExcel」を逆手に取り、PCの処理能力を秒単位で計測。業務効率を最大化するための最適なPC選びをサポートします。",
+                cta_start: "無料診断を開始",
+                features_title: "なぜExcelBenchなのか？",
+                feature_1_title: "リアルな計測",
+                feature_1_desc: "実務で使われる複雑な数式（RANDBETWEEN, COUNTIF等）を用いて、ハードウェアの限界を測定します。",
+                feature_2_title: "ROIの可視化",
+                feature_2_desc: "「年間で推定XX時間の損失」という具体的な不利益を表示。買い替えの必要性を数値で証明します。",
+                feature_3_title: "マルチリンガル",
+                feature_3_desc: "日本語・英語に完全対応。グローバルなチームでも共通の指標でPCスペックを評価できます。",
+                download_title: "準備はいいですか？",
+                download_desc: "次世代のベンチマーク体験を、あなたのPCで。",
+                os_win: "Windows版",
+                license_note: "オープンソースライブラリを使用しています。ライセンス情報はアプリ内で確認可能です。"
+            },
+            en: {
+                doc_title: "ExcelBench - PC Business Suitability Diagnostic Tool",
+                nav_features: "Features",
+                nav_download: "Download Now",
+                hero_title: "Excel Slowness is a <br><span class=\"highlight\">Loss of Profit</span>.",
+                hero_desc: "Turn \"Heavy Excel\" into a metric and measure your PC's processing power in seconds. We support optimal PC selection to maximize business efficiency.",
+                cta_start: "Start Free Diagnostic",
+                features_title: "Why ExcelBench?",
+                feature_1_title: "Real-world Benchmarking",
+                feature_1_desc: "Measure hardware limits using complex formulas (RANDBETWEEN, COUNTIF, etc.) used in actual business scenarios.",
+                feature_2_title: "ROI Visualization",
+                feature_2_desc: "Displays specific disadvantages like \"Estimated XX hours loss per year\". Prove the need for replacement with numbers.",
+                feature_3_title: "Multi-lingual",
+                feature_3_desc: "Fully supports Japanese and English. Evaluate PC specs with common metrics even in global teams.",
+                download_title: "Are you ready?",
+                download_desc: "The next-generation benchmark experience, on your PC.",
+                os_win: "Windows version",
+                license_note: "Uses open-source libraries. License information is available within the app."
+            }
+        };
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            
+            // Save preference
+            localStorage.setItem('preferred-lang', lang);
+        }
+
+        // Initialize
+        const savedLang = localStorage.getItem('preferred-lang') || 
+                         (navigator.language.startsWith('ja') ? 'ja' : 'en');
+        setLanguage(savedLang);
+
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -90,4 +182,4 @@
         });
     </script>
 </body>
-</html>
+</html>
