@@ -1,6 +1,8 @@
 import os
 import re
 
+# プル前に実行すること
+
 def update_html_version(content: str, new_version: str) -> str:
     """
     HTMLコンテンツ内のバージョン表記を置換する関数
