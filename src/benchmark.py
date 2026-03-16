@@ -28,6 +28,7 @@ class ExcelBenchmark:
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
         self.excel = None
+        self.is_cancelled = False
 
     def cleanup_processes(self):
         """既存のExcelプロセスを完全にサイレントにクリーンアップします。"""
@@ -108,8 +109,14 @@ class ExcelBenchmark:
             if not self.excel:
                 self.create_instance()
 
+            if self.is_cancelled: return None
+
             wb = self.excel.Workbooks.Add()
             ws = wb.ActiveSheet
+            
+            if self.is_cancelled:
+                wb.Close(False)
+                return None
 
             # 大量データ入力の高速化のために配列を使用（今回は簡易的に数式を指定）
             # A列: =RANDBETWEEN(1, 10000)
@@ -119,13 +126,26 @@ class ExcelBenchmark:
             # C列: =COUNTIF($A$1:$A$10000, A1)
             ws.Range(f"C1:C{row_count}").Formula = f"=COUNTIF($A$1:$A${row_count}, A1)"
 
+            if self.is_cancelled:
+                wb.Close(False)
+                return None
+
             wb.SaveAs(file_path)
+            
+            if self.is_cancelled:
+                wb.Close(False)
+                return None
+                
             wb.Close()
             logger.info(i18n.t("log_gen_done"))
             return file_path
         except Exception as e:
+            if self.is_cancelled:
+                raise # run_benchmark 側の except で処理される
             logger.error(i18n.t("log_error", msg=f"Error generating test file: {e}"))
-            if 'wb' in locals(): wb.Close(False)
+            if 'wb' in locals(): 
+                try: wb.Close(False)
+                except: pass
             raise
 
     def measure_open_time(self, file_path):
@@ -159,11 +179,16 @@ class ExcelBenchmark:
             
             # 2. ファイル生成
             file_path = self.generate_test_file(row_count)
+            if self.is_cancelled or file_path is None:
+                return None
             
             # 3. 計測開始
             self.create_instance()
             
             for i in range(trials):
+                if self.is_cancelled:
+                    logger.info(i18n.t("cancelled_msg"))
+                    break
                 trial_type_label = i18n.t("cold_start") if i == 0 else i18n.t("hot_start")
                 logger.info(i18n.t("log_trial", current=i+1, total=trials, type=trial_type_label))
                 
@@ -190,6 +215,9 @@ class ExcelBenchmark:
             }
 
         except Exception as e:
+            if self.is_cancelled:
+                logger.info(f"Cancellation cleanup: ignored exception {e}")
+                return None
             logger.error(i18n.t("log_error", msg=f"Benchmark failed: {e}"))
             if self.excel:
                 try: self.excel.Quit()
